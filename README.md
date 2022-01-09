@@ -13,7 +13,7 @@ I noticed that there wasn't an encrypt/decrypt function natively provided in Han
 
 ## How it works
 
-Basically, your private key is used in conjunction with the recipient's public key to generate a shared key.  This shared key does not have to be shared.  Instead, you can simply share the ciphertext and the intialization vector (IV).
+Basically, your private key is used in conjunction with the recipient's public key to generate a shared key.  This shared key must not be shared.  Instead, you can simply share the ciphertext and the intialization vector (IV).
 
 ## Installation Instructions
 
