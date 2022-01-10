@@ -28,12 +28,12 @@ cd zooko-msg
 npm install hsd hs-client readline stream
 ```
 
-3. Setup your hsd or bob API keys in the `keys` folder.
+3. Setup your hsd `keys` folder
 ```
 echo "someapikey" > keys/node
 echo "somewalletkey" > keys/wallet
 ```
-You can get these in your Bob Wallet setup for example.  For hsd, I'm sure you know how to do it if you're running it that way.
+You can get these with hsd.  Make sure hsd has all the index-tx, index-address and other options enabled.
 
 4. Run commands!
 
