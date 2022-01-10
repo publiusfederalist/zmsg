@@ -11,6 +11,7 @@ const fs = require('fs');
 const network = Network.get('main');
 const readline = require('readline');
 const writable = require('stream').Writable;
+const constants = require('./lib/constants.js');
 
 var mutable = new writable({
   write: function(chunk, encoding, callback) {
@@ -26,6 +27,8 @@ const rl = readline.createInterface({
 });
 mutable.muted = false;
 
+const argv = process.argv;
+const argc = process.argv.length;
 
 const nodeOptions = {
   network: network.type,
@@ -40,16 +43,13 @@ const nodeClient = new NodeClient(nodeOptions);
 const _walletClient = new WalletClient(walletOptions);
 let walletClient;
 
-(async function() {
-  const argv=process.argv;
-  const argc=argv.length;
+if(argc != 4 && argc != 5) {
+  console.log("Usage: ",argv[1],"<wallet>","<name>");
+  process.exit(0);
+}
 
-  if(argc!=6 && argc!=7) {
-    console.log("Encrypt Usage: ",argv[1],"<wallet>","<from>","<to>","\"<msg>\"");
-    console.log("");
-    console.log("Decrypt Usage: ",argv[1],"<wallet>","<from>","<to>","\"<encrypted-msg>\"","\"<IV>\"");
-    process.exit();
-  }
+(async function() {
+
   walletClient = _walletClient.wallet(argv[2]);
   if(!walletClient) {
     console.log("Wallet ",argv[2],"not found");
@@ -62,30 +62,28 @@ let walletClient;
   const password = (await it.next()).value
   mutable.muted = false;
 
-  if(argc==7) {
-    const keys = await getKeys(argv[4],password);
-    let targetPubkey = await getPubkeyFromName(argv[3]);
-    let secret=getSecret(targetPubkey,keys.privateKey).toString('hex');
-    let decrypted=decrypt(argv[5],secret,argv[6]);
-    console.log("Decrypted: ",decrypted.toString());
-    process.exit(0);
-  }
-  else if(argc==6) {
+  let posts = fs.readFileSync(__dirname+"/.posts").toString().split("\n");
+  if(argc==4) {
     const keys = await getKeys(argv[3],password);
-    let targetPubkey = await getPubkeyFromName(argv[4]);
-    let secret=getSecret(targetPubkey,keys.privateKey).toString('hex');
-    let encrypted=encrypt(argv[5],secret);
-    console.log("Encrypted: ",encrypted.cyphertext);
-    console.log("IV: ",encrypted.iv);
-    process.exit(0);
+    for(let x=0;x<posts.length;x++) {
+      let post = posts[x].split(",");
+      let targetPubkey = await getPubkeyFromName(post[1]);
+      let secret=getSecret(targetPubkey,keys.privateKey).toString('hex');
+      let success=true;
+      let decrypted;
+      try {
+        let _enc = post[2].split("$$$");
+        decrypted=decrypt(_enc[1],secret,_enc[0]);
+      } catch(e) {
+        success=false;
+      }
+      if(success)
+        console.log("Decrypted from "+post[1]+" at "+post[0]+": ",decrypted.toString());
+    }
+    process.exit();
   }
-})()
-
+})();
 function decrypt(msg,key,iv) { return aes.decipher(Buffer.from(msg,'hex'),Buffer.from(key,'hex'),Buffer.from(iv,'hex')) }
-function encrypt(msg,key) {
-  let iv = randomBytes(16);
-  return {cyphertext:aes.encipher(Buffer.from(msg),Buffer.from(key,'hex'),iv).toString('hex'), iv:iv.toString('hex')};
-}
 
 function getSecret(pub,priv) { return ecdh(Buffer.from(pub,'hex'),Buffer.from(priv,'hex')) }
 
@@ -115,14 +113,16 @@ async function getPubkeyFromAddress(address) {
   }
   return key;
 }
+
 async function getAddressFromName(name) {
   let result = await nodeClient.execute('getnameinfo', [name]);
   if(!result || !result.info || !result.info.owner || !result.info.owner.hash) return null;
   result = await nodeClient.getCoin(result.info.owner.hash, result.info.owner.index);
   if(!result || !result.address) return null;
   return result.address;
-} 
+}
 function ecdh(publicKey, privateKey) {
   const secret = secp256k1.derive(publicKey, privateKey, true);
   return sha256.digest(secret);
 }
+

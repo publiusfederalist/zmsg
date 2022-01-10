@@ -15,6 +15,14 @@ I noticed that there wasn't an encrypt/decrypt function natively provided in Han
 
 Basically, your private key is used in conjunction with the recipient's public key to generate a shared key.  This shared key must not be shared.  Instead, you can simply share the ciphertext and the intialization vector (IV).
 
+## Also go on chain
+
+You can also use zmsg-broadcast which is the same as zmsg, except it will put your message on chain.  Then, someone can use `zmsgpull` to pull messages, and then `zmsgread` to read them.
+
+The benefit of this is that you can encrypt messages and send them.  The world will know you encrypted a message and sent it, but it will not know to whom it was for or what it said.
+
+Of course, opponents might have issue with using a chain for this purpose, but I feel the benefits outweight the cons.
+
 ## Installation Instructions
 
 1. Clone
