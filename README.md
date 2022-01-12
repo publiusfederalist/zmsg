@@ -1,8 +1,6 @@
 # zooko-msg
 ### Encrypt and decrypt messages using AES with a preshared ECDH key generated using keys associated with Handshake names.
 
-# [Why I Quit Handshake](https://github.com/publiusfederalist/why-i-quit-handshake)
-
 I noticed that there wasn't an encrypt/decrypt function natively provided in Handshake, so I built this using concepts introduced earlier in the Bitcoin space.  The benefit of this implementation is that it is complete because of Handshake names.  [Zooko's Triangle](https://en.wikipedia.org/wiki/Zooko%27s_triangle) is solved with Handshake making crypto better than ever!
 
 ![1](https://raw.githubusercontent.com/publiusfederalist/zooko-msg/master/1.png)
