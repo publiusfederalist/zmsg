@@ -1,5 +1,5 @@
 # zooko-msg
-### Encrypt and decrypt messages using AES with a preshared ECDH key generated using keys associated with Handshake names.
+### Encrypt and decrypt messages using AES with a common ECDH key generated using keys associated with Handshake names.
 
 ## Learn more by joining the [Handshake Discord Community](https://discord.gg/tXJ2UdGuda)
 
@@ -15,7 +15,7 @@ I noticed that there wasn't an encrypt/decrypt function natively provided in Han
 
 ## How it works
 
-Basically, your private key is used in conjunction with the recipient's public key to generate a shared key.  This shared key must not be shared.  Instead, you can simply share the ciphertext and the intialization vector (IV).
+Basically, your private key is used in conjunction with the recipient's public key to generate a common key.  This common key must not be shared.  Instead, you can simply share the ciphertext and the intialization vector (IV).
 
 ## Also go on chain
 
