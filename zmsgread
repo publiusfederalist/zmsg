@@ -1,10 +1,5 @@
 #!/usr/bin/env node
-const {randomBytes} = require('bcrypto/lib/random');
-const aes = require('bcrypto/lib/aes');
-const secp256k1 = require('bcrypto/lib/secp256k1');
-const sha256 = require('bcrypto/lib/sha256');
-const base58 = require('bcrypto/lib/encoding/base58');
-const {Address} = require('hsd/lib/primitives');
+const {encrypt, decrypt} = require("hsencrypt");
 const {WalletClient, NodeClient} = require('hs-client');
 const {Network} = require('hsd');
 const fs = require('fs');
@@ -64,16 +59,13 @@ if(argc != 4 && argc != 5) {
 
   let posts = fs.readFileSync(__dirname+"/.posts").toString().split("\n");
   if(argc==4) {
-    const keys = await getKeys(argv[3],password);
     for(let x=0;x<posts.length;x++) {
       let post = posts[x].split(",");
-      let targetPubkey = await getPubkeyFromName(post[1]);
-      let secret=getSecret(targetPubkey,keys.privateKey).toString('hex');
       let success=true;
       let decrypted;
       try {
         let _enc = post[2].split("$$$");
-        decrypted=decrypt(_enc[1],secret,_enc[0]);
+        decrypted=await decrypt(walletClient, nodeClient, password, post[1], argv[3], _enc[1], _enc[0]);
       } catch(e) {
         success=false;
       }
@@ -83,46 +75,3 @@ if(argc != 4 && argc != 5) {
     process.exit();
   }
 })();
-function decrypt(msg,key,iv) { return aes.decipher(Buffer.from(msg,'hex'),Buffer.from(key,'hex'),Buffer.from(iv,'hex')) }
-
-function getSecret(pub,priv) { return ecdh(Buffer.from(pub,'hex'),Buffer.from(priv,'hex')) }
-
-async function getKeys(name,passphrase) {
-  let me, privWIF, privkey58, privkey, _tmp;
-  me = await getAddressFromName(name);
-  privWIF = (await walletClient.getWIF(me, passphrase)).privateKey;
-  privkey58 = base58.decode(privWIF).slice(1);
-  _tmp = new Buffer.alloc(privkey58.length - 5);
-  privkey58.copy(_tmp, 0, 0, privkey58.length - 5);
-  privkey58=_tmp;
-  privkey = privkey58.toString('hex');
-  pubkey = await getPubkeyFromName(name);
-
-  return {address:me, privateWIF:privWIF,publicKey:pubkey,privateKey:privkey};
-}
-async function getPubkeyFromName(name) { return await getPubkeyFromAddress(await getAddressFromName(name)) }
-async function getPubkeyFromAddress(address) {
-  let key=null;
-  let result = await nodeClient.getTXByAddress(address);
-  for(let x=0;x<result.length;x++) {
-    let res = result[x].inputs;
-    for(let y=0;y<res.length;y++) {
-      let input = res[y];
-      if(input.coin.address===address) key=input.witness[1];
-    }
-  }
-  return key;
-}
-
-async function getAddressFromName(name) {
-  let result = await nodeClient.execute('getnameinfo', [name]);
-  if(!result || !result.info || !result.info.owner || !result.info.owner.hash) return null;
-  result = await nodeClient.getCoin(result.info.owner.hash, result.info.owner.index);
-  if(!result || !result.address) return null;
-  return result.address;
-}
-function ecdh(publicKey, privateKey) {
-  const secret = secp256k1.derive(publicKey, privateKey, true);
-  return sha256.digest(secret);
-}
-
