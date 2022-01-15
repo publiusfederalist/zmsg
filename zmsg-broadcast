@@ -42,7 +42,7 @@ let walletClient;
   let bName,bMessage;
   if(argc==7) {
     let decrypted=await decrypt(walletClient, nodeClient, password, argv[4], argv[3], argv[5], argv[6]);
-    console.log("Decrypted: ",decrypted.toString());
+    console.log("Decrypted: ",decrypted);
     process.exit(0);
   }
   else if(argc==6) {

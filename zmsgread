@@ -53,7 +53,7 @@ if(argc != 4 && argc != 5) {
         success=false;
       }
       if(success)
-        console.log("Decrypted from "+post[1]+" at "+post[0]+": ",decrypted.toString());
+        console.log("Decrypted from "+post[1]+" at "+post[0]+": ",decrypted);
     }
     process.exit();
   }
