@@ -1,7 +1,7 @@
 # zooko-msg
 ### Encrypt and decrypt messages using AES with a preshared ECDH key generated using keys associated with Handshake names.
 
-# [Why I Quit Handshake](https://github.com/publiusfederalist/why-i-quit-handshake)
+## Learn more by joining the [Handshake Discord Community](https://discord.gg/tXJ2UdGuda)
 
 I noticed that there wasn't an encrypt/decrypt function natively provided in Handshake, so I built this using concepts introduced earlier in the Bitcoin space.  The benefit of this implementation is that it is complete because of Handshake names.  [Zooko's Triangle](https://en.wikipedia.org/wiki/Zooko%27s_triangle) is solved with Handshake making crypto better than ever!
 
@@ -35,7 +35,7 @@ git clone https://github.com/publiusfederalist/zooko-msg
 2. Get the npms
 ```
 cd zooko-msg
-npm install hsd hs-client readline stream
+npm install hsd hs-client readline stream hsencrypt
 ```
 
 3. Setup your hsd `keys` folder
@@ -58,6 +58,10 @@ zmsg <yourname> <theirname> "<msg>"
 ```
 zmsg <theirname> <yourname> <encrypted> <iv>
 ````
+
+#### Blockchain
+
+You can also use `zmsg-broadcast` which will actually write this to the blockchain.
 
 ## Copyright
 
