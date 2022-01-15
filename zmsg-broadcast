@@ -4,24 +4,8 @@ const {WalletClient, NodeClient} = require('hs-client');
 const {Network} = require('hsd');
 const fs = require('fs');
 const network = Network.get('main');
-const readline = require('readline');
-const writable = require('stream').Writable;
+const ConsoleIO = new (require("consoleinout"))(console);
 const constants = require("./lib/constants.js");
-
-var mutable = new writable({
-  write: function(chunk, encoding, callback) {
-    if (!this.muted)
-      process.stdout.write(chunk, encoding);
-    callback();
-  }
-});
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: mutable,
-  terminal: true
-});
-mutable.muted = false;
-
 
 const nodeOptions = {
   network: network.type,
@@ -52,11 +36,8 @@ let walletClient;
     process.exit(0);
   }
 
-  console.log("Enter Password:");
-  const it = rl[Symbol.asyncIterator]();
-  mutable.muted = true;
-  const password = (await it.next()).value
-  mutable.muted = false;
+  console.output("Enter Password: ");
+  const password = await console.input(true);
 
   let bName,bMessage;
   if(argc==7) {

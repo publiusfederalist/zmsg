@@ -35,7 +35,7 @@ git clone https://github.com/publiusfederalist/zooko-msg
 2. Get the npms
 ```
 cd zooko-msg
-npm install hsd hs-client readline stream hsencrypt
+npm install hsd hs-client readline stream hsencrypt consoleinout
 ```
 
 3. Setup your hsd `keys` folder
