@@ -1,5 +1,7 @@
-# zooko-msg
+# zmsg
 ### Encrypt and decrypt messages using AES with a common ECDH key generated using keys associated with Handshake names.
+### or
+### Encrypt and decrypt messages using AEAD with a PFS ECDH key based on ephemeral keys associated with keys associated with Handshake names.
 
 ## Learn more by joining the [Handshake Discord Community](https://discord.gg/tXJ2UdGuda)
 
@@ -15,7 +17,11 @@ I noticed that there wasn't an encrypt/decrypt function natively provided in Han
 
 ## How it works
 
+### zmsg 
 Basically, your private key is used in conjunction with the recipient's public key to generate a common key.  This common key must not be shared.  Instead, you can simply share the ciphertext and the initialization vector (IV).  The system uses [hsencrypt](https://github.com/publiusfederalist/hsencrypt) under the hood which handles the ECDH, AES and keyfinding operations. 
+
+### zmsg2
+zmsg2 uses PFS ephemeral keys and chacha20xpoly1320.
 
 ## Also go on chain
 
@@ -29,7 +35,7 @@ Of course, opponents might have issue with using a chain for this purpose, but I
 
 1. Clone
 ```
-git clone https://github.com/publiusfederalist/zooko-msg
+git clone https://github.com/publiusfederalist/zmsg
 ```
 
 2. Get the npms
@@ -51,12 +57,12 @@ You can get these with hsd.  Make sure hsd has all the index-tx, index-address a
 
 #### Encryption
 ```
-zmsg <yourname> <theirname> "<msg>"
+zmsg <wallet> <yourname> <theirname> "<msg>"
 ```
 
 #### Decryption
 ```
-zmsg <theirname> <yourname> <encrypted> <iv>
+zmsg <wallet> <theirname> <yourname> <encrypted> d
 ````
 
 #### Blockchain

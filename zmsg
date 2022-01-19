@@ -26,7 +26,7 @@ let walletClient;
   if(argc!=6 && argc!=7) {
     console.log("Encrypt Usage: ",argv[1],"<wallet>","<from>","<to>","\"<msg>\"");
     console.log("");
-    console.log("Decrypt Usage: ",argv[1],"<wallet>","<from>","<to>","\"<encrypted-msg>\"","\"<IV>\"");
+    console.log("Decrypt Usage: ",argv[1],"<wallet>","<from>","<to>","\"<encrypted-msg>\"", "\"d\"");
     process.exit();
   }
   walletClient = _walletClient.wallet(argv[2]);
@@ -39,14 +39,13 @@ let walletClient;
   const password = await console.input(true);
 
   if(argc==7) {
-    let decrypted=await decrypt(walletClient, nodeClient, password, argv[4], argv[3], argv[5], argv[6]);
+    let decrypted=await decrypt(walletClient, nodeClient, password, argv[4], argv[3], argv[5]);
     console.log("Decrypted: ",decrypted);
     process.exit(0);
   }
   else if(argc==6) {
     let encrypted=await encrypt(walletClient, nodeClient, password, argv[3], argv[4], argv[5]);
-    console.log("Encrypted: ",encrypted.cyphertext);
-    console.log("IV: ",encrypted.iv);
+    console.log(encrypted);
     process.exit(0);
   }
 })()

@@ -47,8 +47,9 @@ if(argc != 4 && argc != 5) {
       let success=true;
       let decrypted;
       try {
-        let _enc = post[2].split("$$$");
-        decrypted=await decrypt(walletClient, nodeClient, password, post[1], argv[3], _enc[1], _enc[0]);
+        let _enc = post[2].substr(0,66)
+        let _ctxt = post[2].substr(66);
+        decrypted=await decrypt(walletClient, nodeClient, password, post[1], _enc, argv[3], _ctxt);
       } catch(e) {
         success=false;
       }
