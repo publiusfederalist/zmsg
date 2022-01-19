@@ -1,7 +1,5 @@
 # zmsg
-### Encrypt and decrypt messages using AES with a common ECDH key generated using keys associated with Handshake names.
-### or
-### Encrypt and decrypt messages using AEAD with a PFS ECDH key based on ephemeral keys associated with keys associated with Handshake names.
+### Encrypt and decrypt messages using AEAD with an ephemeral key
 
 ## Learn more by joining the [Handshake Discord Community](https://discord.gg/tXJ2UdGuda)
 
@@ -18,10 +16,7 @@ I noticed that there wasn't an encrypt/decrypt function natively provided in Han
 ## How it works
 
 ### zmsg 
-Basically, your private key is used in conjunction with the recipient's public key to generate a common key.  This common key must not be shared.  Instead, you can simply share the ciphertext and the initialization vector (IV).  The system uses [hsencrypt](https://github.com/publiusfederalist/hsencrypt) under the hood which handles the ECDH, AES and keyfinding operations. 
-
-### zmsg2
-zmsg2 uses PFS ephemeral keys and chacha20xpoly1320.
+Basically, your private key is used in conjunction with the recipient's public key to generate a common key.  This common key is ephemeral.  Instead, you can simply share the ciphertext.  The system uses [hsencrypt](https://github.com/publiusfederalist/hsencrypt
 
 ## Also go on chain
 
