@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const {encrypt, decrypt} = require("hsencrypt2");
+const {encrypt, decrypt} = require("hsencrypt");
 const {WalletClient, NodeClient} = require('hs-client');
 const {Network} = require('hsd');
 const fs = require('fs');
