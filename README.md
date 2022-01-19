@@ -16,7 +16,7 @@ I noticed that there wasn't an encrypt/decrypt function natively provided in Han
 ## How it works
 
 ### zmsg 
-Basically, your private key is used in conjunction with the recipient's public key to generate a common key.  This common key is ephemeral.  Instead, you can simply share the ciphertext.  The system uses [hsencrypt](https://github.com/publiusfederalist/hsencrypt
+Basically, your private key is used in conjunction with the recipient's public key to generate a common key.  This common key is ephemeral.  Instead, you can simply share the ciphertext.  The system uses [hsencrypt](https://github.com/publiusfederalist/hsencrypt)
 
 ## Also go on chain
 
